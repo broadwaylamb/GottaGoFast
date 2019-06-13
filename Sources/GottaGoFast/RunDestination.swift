@@ -139,7 +139,7 @@ struct RunDestination: Codable, Equatable {
         .split(separator: "\n")
         .map { line -> (key: String, value: String) in
             let components = line
-                .split(separator: ":", maxSplits: 2)
+                .split(separator: ":", maxSplits: 2, omittingEmptySubsequences: false)
                 .map { $0.trimmingCharacters(in: .whitespaces) }
             if components.count != 2 { throw BenchmarkError.wrongProcInfoFormat }
             return (key: components[0], value: components[1])
