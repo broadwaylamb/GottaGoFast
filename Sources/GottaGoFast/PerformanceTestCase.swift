@@ -133,12 +133,12 @@ open class PerformanceTestCase: XCTestCase {
     open var testInfo: String { return "" }
 
     @discardableResult
-    public func benchmark(file: StaticString = #file,
-                          line: UInt = #line,
-                          allowFailure: Bool = false,
-                          executionCount: Int = 10,
-                          strategy: BenchmarkStrategy = .minimum,
-                          _ block: () throws -> Void) throws -> BenchmarkResult {
+    open func benchmark(file: StaticString = #file,
+                        line: UInt = #line,
+                        allowFailure: Bool = false,
+                        executionCount: Int = 10,
+                        strategy: BenchmarkStrategy = .minimum,
+                        _ block: () throws -> Void) throws -> BenchmarkResult {
 
         var baselineDir = URL(fileURLWithPath: file.description)
         baselineDir = URL(fileURLWithPath: file.description)
