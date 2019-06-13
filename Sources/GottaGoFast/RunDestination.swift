@@ -62,7 +62,7 @@ struct RunDestination: Codable, Equatable {
                cpuKind: String,
                cpuSpeedInMHz: Int,
                logicalCPUCoresPerPackage: Int,
-               modelCode: String,
+               modelCode: String?,
                physicalCPUCoresPerPackage: Int,
                platform: String,
                arch: String) {
@@ -188,7 +188,7 @@ struct RunDestination: Codable, Equatable {
         arch: arch
     )
 #else
-    fatalError("This platform does not support benchmarking")
+#error("This platform does not support benchmarking")
 #endif
   }
 }
