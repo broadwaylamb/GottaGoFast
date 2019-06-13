@@ -48,6 +48,8 @@ open class PerformanceTestCase: XCTestCase {
 
     private var _baselineDir: URL?
 
+    private static var _destinationURL: URL?
+
     override open func setUp() {
         super.setUp()
         overwriteBaseline = false
@@ -66,6 +68,26 @@ open class PerformanceTestCase: XCTestCase {
         overwriteBaseline = false
         _saveNewBaselineClosure = nil
         benchmarkUserInfo = [:]
+
+        super.tearDown()
+    }
+
+    open override class func tearDown() {
+
+        if let destinationURL = _destinationURL {
+            // Only display the final baselines after the whole suite has run.
+            do {
+                let encodedBaselines = try String(contentsOf: destinationURL)
+
+                print("""
+                If running on CI, you can update the baseline by copying \
+                the following YAML and replace the contents of \(destinationURL) with it:
+
+                """)
+
+                print(encodedBaselines, terminator: "\n\n")
+            } catch {}
+        }
 
         super.tearDown()
     }
@@ -343,6 +365,8 @@ open class PerformanceTestCase: XCTestCase {
 
         let destinationURL = baselinesDir.appendingPathComponent("\(uuid).yml")
 
+        Self._destinationURL = destinationURL
+
         let encodedBaselines = try encoder.encode(existingBaselines)
 
         if overwriteBaseline {
@@ -360,14 +384,6 @@ open class PerformanceTestCase: XCTestCase {
 
             print(encodedDestinations, terminator: "\n\n")
         }
-
-        print("""
-        If running on CI, you can update the baseline by copying \
-        the following YAML and replace the contents of \(destinationURL) with it:
-
-        """)
-
-        print(encodedBaselines, terminator: "\n\n")
     }
 
     func testLog(_ log: Any) {
