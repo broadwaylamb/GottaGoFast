@@ -338,8 +338,6 @@ open class PerformanceTestCase: XCTestCase {
             userInfo: benchmarkUserInfo.isEmpty ? nil : benchmarkUserInfo
         )
 
-        let hasBaseline = existingBaselines[testcaseName]?[testName] != nil
-
         existingBaselines[testcaseName,
                           default: [testName : baseline]][testName] = baseline
 
@@ -354,7 +352,7 @@ open class PerformanceTestCase: XCTestCase {
         }
 
         if !hasDestination {
-            testLog("""
+            print("""
             If running on CI, you can update the destinations by copying \
             the following YAML and replace the contents of \(baselinesInfo) with it:
 
@@ -363,7 +361,7 @@ open class PerformanceTestCase: XCTestCase {
             print(encodedDestinations, terminator: "\n\n")
         }
 
-        testLog("""
+        print("""
         If running on CI, you can update the baseline by copying \
         the following YAML and replace the contents of \(destinationURL) with it:
 
