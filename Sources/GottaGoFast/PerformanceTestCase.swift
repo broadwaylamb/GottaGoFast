@@ -138,7 +138,7 @@ open class PerformanceTestCase: XCTestCase {
                         allowFailure: Bool = false,
                         executionCount: Int = 10,
                         strategy: BenchmarkStrategy = .minimum,
-                        _ block: () throws -> Void) throws -> BenchmarkResult {
+                        _ block: () throws -> Void) throws -> BenchmarkResult? {
 
         var baselineDir = URL(fileURLWithPath: file.description)
         baselineDir = URL(fileURLWithPath: file.description)
