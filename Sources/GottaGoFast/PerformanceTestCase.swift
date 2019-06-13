@@ -355,27 +355,21 @@ open class PerformanceTestCase: XCTestCase {
 
         if !hasDestination {
             testLog("""
-            Destination not found. A new destination \(uuid) will be created.
-
-            If running on CI, you can copy the following YAML and replace the contents \
-            of \(baselinesInfo) with it:
+            If running on CI, you can update the destinations by copying \
+            the following YAML and replace the contents of \(baselinesInfo) with it:
 
             """)
 
             print(encodedDestinations, terminator: "\n\n")
         }
 
-        if !hasBaseline {
-            testLog("""
-            Baseline not found. A new baseline will be created.
+        testLog("""
+        If running on CI, you can update the baseline by copying \
+        the following YAML and replace the contents of \(destinationURL) with it:
 
-            If running on CI, you can copy the following YAML and replace the contents \
-            of \(destinationURL) with it:
+        """)
 
-            """)
-
-            print(encodedBaselines, terminator: "\n\n")
-        }
+        print(encodedBaselines, terminator: "\n\n")
     }
 
     func testLog(_ log: Any) {
