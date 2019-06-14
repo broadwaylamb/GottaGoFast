@@ -257,9 +257,8 @@ open class PerformanceTestCase: XCTestCase {
                 metric = \.minimum
             }
 
-            let relativePercentDiff =
-                (result[keyPath: metric] - baseline.measurement)
-                    / baseline.measurement * 100
+            let relativePercentDiff = baseline.measurement /
+                (result[keyPath: metric] - baseline.measurement) * 100
 
             let withinMargin =
                 abs(relativePercentDiff) <= baseline.maxPercentRelativeStandardDeviation
@@ -268,12 +267,11 @@ open class PerformanceTestCase: XCTestCase {
 
                 let failureSecription = """
 
-
                 \(withinMargin || allowFailure ? "" : "⛔️⛔️⛔️")
                 Strategy: \(strategy),
                 Baseline measurement: \(baseline.measurement, .precision(3)), \
                 new measurement: \(result[keyPath: metric], .precision(3)), \
-                which is worse by \(relativePercentDiff, .precision(3))% \
+                which is \(relativePercentDiff, .precision(3))% slower, \
                 (\(withinMargin
                 ? "but withing the margin of"
                 : "max allowed deviation is") \
@@ -296,7 +294,7 @@ open class PerformanceTestCase: XCTestCase {
                 Strategy: \(strategy),
                 Baseline measurement: \(baseline.measurement, .precision(3)), \
                 new measurement: \(result[keyPath: metric], .precision(3)), \
-                which is better by \(abs(relativePercentDiff), .precision(3))%.
+                which is \(-relativePercentDiff, .precision(3))% faster.
 
 
                 """
