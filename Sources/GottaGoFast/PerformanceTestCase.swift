@@ -49,6 +49,7 @@ open class PerformanceTestCase: XCTestCase {
     private var _baselineDir: URL?
 
     private static var _destinationURL: URL?
+    private static var _encodedBaselines: String?
 
     override open func setUp() {
         super.setUp()
@@ -74,19 +75,16 @@ open class PerformanceTestCase: XCTestCase {
 
     open override class func tearDown() {
 
-        if let destinationURL = _destinationURL {
+        if let destinationURL = _destinationURL,
+           let encodedBaselines = _encodedBaselines {
             // Only display the final baselines after the whole suite has run.
-            do {
-                let encodedBaselines = try String(contentsOf: destinationURL)
+            print("""
+            If running on CI, you can update the baseline by copying \
+            the following YAML and replace the contents of \(destinationURL) with it:
 
-                print("""
-                If running on CI, you can update the baseline by copying \
-                the following YAML and replace the contents of \(destinationURL) with it:
+            """)
 
-                """)
-
-                print(encodedBaselines, terminator: "\n\n")
-            } catch {}
+            print(encodedBaselines, terminator: "\n\n")
         }
 
         super.tearDown()
@@ -366,6 +364,7 @@ open class PerformanceTestCase: XCTestCase {
         Self._destinationURL = destinationURL
 
         let encodedBaselines = try encoder.encode(existingBaselines)
+        Self._encodedBaselines = encodedBaselines
 
         if overwriteBaseline {
             try encodedBaselines.write(to: destinationURL,
