@@ -260,7 +260,7 @@ open class PerformanceTestCase: XCTestCase {
             let withinMargin =
                 abs(relativePercentDiff) <= baseline.maxPercentRelativeStandardDeviation
 
-            if relativePercentDiff > 0 {
+            if relativePercentDiff < 1 {
 
                 let failureSecription = """
 
@@ -268,7 +268,7 @@ open class PerformanceTestCase: XCTestCase {
                 Strategy: \(strategy),
                 Baseline measurement: \(baseline.measurement, .precision(5)), \
                 new measurement: \(result[keyPath: metric], .precision(5)), \
-                which is \(relativePercentDiff, .precision(3))% slower, \
+                which is \(1 / relativePercentDiff, .precision(3))% slower, \
                 (\(withinMargin
                 ? "but withing the margin of"
                 : "max allowed deviation is") \
@@ -291,7 +291,7 @@ open class PerformanceTestCase: XCTestCase {
                 Strategy: \(strategy),
                 Baseline measurement: \(baseline.measurement, .precision(5)), \
                 new measurement: \(result[keyPath: metric], .precision(5)), \
-                which is \(-relativePercentDiff, .precision(3))% faster.
+                which is \(relativePercentDiff, .precision(3))% faster.
 
 
                 """
