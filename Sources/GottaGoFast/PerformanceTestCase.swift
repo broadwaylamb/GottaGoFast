@@ -255,8 +255,7 @@ open class PerformanceTestCase: XCTestCase {
                 metric = \.minimum
             }
 
-            let relativePercentDiff = baseline.measurement /
-                (result[keyPath: metric] - baseline.measurement) * 100
+            let relativePercentDiff = baseline.measurement / result[keyPath: metric] * 100
 
             let withinMargin =
                 abs(relativePercentDiff) <= baseline.maxPercentRelativeStandardDeviation
