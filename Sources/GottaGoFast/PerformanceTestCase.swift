@@ -267,8 +267,8 @@ open class PerformanceTestCase: XCTestCase {
 
                 \(withinMargin || allowFailure ? "" : "⛔️⛔️⛔️")
                 Strategy: \(strategy),
-                Baseline measurement: \(baseline.measurement, .precision(3)), \
-                new measurement: \(result[keyPath: metric], .precision(3)), \
+                Baseline measurement: \(baseline.measurement, .precision(5)), \
+                new measurement: \(result[keyPath: metric], .precision(5)), \
                 which is \(relativePercentDiff, .precision(3))% slower, \
                 (\(withinMargin
                 ? "but withing the margin of"
@@ -290,8 +290,8 @@ open class PerformanceTestCase: XCTestCase {
 
                 \(withinMargin || allowFailure ? "" : "🎉🎉🎉")
                 Strategy: \(strategy),
-                Baseline measurement: \(baseline.measurement, .precision(3)), \
-                new measurement: \(result[keyPath: metric], .precision(3)), \
+                Baseline measurement: \(baseline.measurement, .precision(5)), \
+                new measurement: \(result[keyPath: metric], .precision(5)), \
                 which is \(-relativePercentDiff, .precision(3))% faster.
 
 
