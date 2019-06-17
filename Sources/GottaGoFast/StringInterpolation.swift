@@ -49,7 +49,7 @@ internal struct NumberFormat {
     }
 
     func string(from number: Double) -> String {
-        formatter.string(from: number as NSNumber) ?? String(number)
+        return formatter.string(from: number as NSNumber) ?? String(number)
     }
 
     static func precision(_ p: Int) -> NumberFormat {

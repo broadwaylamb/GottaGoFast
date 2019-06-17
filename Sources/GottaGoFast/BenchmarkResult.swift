@@ -43,7 +43,7 @@ public struct BenchmarkResult {
     public let standardDeviationNegligibilityThreshold: Double
 
     public var average: TimeInterval {
-        measurements.reduce(0, +) / Double(Int(measurements.count))
+        return measurements.reduce(0, +) / Double(Int(measurements.count))
     }
 
     public var standardDeviation: TimeInterval {
@@ -54,9 +54,13 @@ public struct BenchmarkResult {
         return variance.squareRoot()
     }
 
-    public var relativeStandardDeviation: Double { (standardDeviation * 100) / average }
+    public var relativeStandardDeviation: Double {
+        return (standardDeviation * 100) / average
+    }
 
-    public var minimum: TimeInterval { measurements.min()! }
+    public var minimum: TimeInterval {
+        return measurements.min()!
+    }
 
     internal func print() {
 

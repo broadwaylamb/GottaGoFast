@@ -102,9 +102,9 @@ open class PerformanceTestCase: XCTestCase {
         return baselinesDir.appendingPathComponent("Info.yml")
     }
 
-    open var maxRelativeStandardDeviation: Double { 15.0 }
+    open var maxRelativeStandardDeviation: Double { return 15.0 }
 
-    open var standardDeviationNegligibilityThreshold: Double { 0.1 }
+    open var standardDeviationNegligibilityThreshold: Double { return 0.1 }
 
     internal var testcaseName: String {
         return String(describing: type(of: self))
@@ -203,7 +203,7 @@ open class PerformanceTestCase: XCTestCase {
 
             let data = (try? String(contentsOf: baselinesInfo)) ?? ""
 
-            let decoder = Self._decoder
+            let decoder = PerformanceTestCase._decoder
 
             let destinations = (try? decoder
                 .decode([String : RunDestination].self, from: data)) ?? [:]
@@ -339,7 +339,7 @@ open class PerformanceTestCase: XCTestCase {
         let uuid = existingDestinationUUID ?? UUID().uuidString
         existingDestinations[uuid] = runDestination
 
-        let encoder = Self._encoder
+        let encoder = PerformanceTestCase._encoder
 
         let encodedDestinations = try encoder.encode(existingDestinations)
 
@@ -361,10 +361,10 @@ open class PerformanceTestCase: XCTestCase {
 
         let destinationURL = baselinesDir.appendingPathComponent("\(uuid).yml")
 
-        Self._destinationURL = destinationURL
+        PerformanceTestCase._destinationURL = destinationURL
 
         let encodedBaselines = try encoder.encode(existingBaselines)
-        Self._encodedBaselines = encodedBaselines
+        PerformanceTestCase._encodedBaselines = encodedBaselines
 
         if overwriteBaseline {
             try encodedBaselines.write(to: destinationURL,
