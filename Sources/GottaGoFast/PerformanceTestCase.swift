@@ -199,6 +199,14 @@ open class PerformanceTestCase: XCTestCase {
             return
         }
 
+        let metric: KeyPath<BenchmarkResult, TimeInterval>
+        switch strategy {
+        case .average:
+            metric = \.average
+        case .minimum:
+            metric = \.minimum
+        }
+
         do {
 
             let data = (try? String(contentsOf: baselinesInfo)) ?? ""
@@ -214,12 +222,14 @@ open class PerformanceTestCase: XCTestCase {
                 .first(where: { $0.value == currentDestination })?.key else {
 
                     _saveNewBaselineClosure = { [unowned self] in
-                        try self._saveNewBaselineIfNeeded(currentDestination,
-                                                  result,
-                                                  strategy: strategy,
-                                                  existingDestinationUUID: nil,
-                                                  existingDestinations: destinations,
-                                                  existingBaselines: [:])
+                        try self._saveNewBaselineIfNeeded(
+                            currentDestination,
+                            result[keyPath: metric],
+                            strategy: strategy,
+                            existingDestinationUUID: nil,
+                            existingDestinations: destinations,
+                            existingBaselines: [:]
+                        )
                     }
 
                     throw BenchmarkError.baselineNotFound
@@ -235,24 +245,18 @@ open class PerformanceTestCase: XCTestCase {
             guard let baseline = baselines[testcaseName]?[testName] else {
 
                 _saveNewBaselineClosure = { [unowned self] in
-                    try self._saveNewBaselineIfNeeded(currentDestination,
-                                              result,
-                                              strategy: strategy,
-                                              existingDestinationUUID: baselineUUID,
-                                              existingDestinations: destinations,
-                                              existingBaselines: baselines)
+                    try self._saveNewBaselineIfNeeded(
+                        currentDestination,
+                        result[keyPath: metric],
+                        strategy: strategy,
+                        existingDestinationUUID: baselineUUID,
+                        existingDestinations: destinations,
+                        existingBaselines: baselines
+                    )
                 }
                 
 
                 throw BenchmarkError.baselineNotFound
-            }
-
-            let metric: KeyPath<BenchmarkResult, TimeInterval>
-            switch strategy {
-            case .average:
-                metric = \.average
-            case .minimum:
-                metric = \.minimum
             }
 
             let relativePercentDiff =
@@ -301,11 +305,11 @@ open class PerformanceTestCase: XCTestCase {
 
             _saveNewBaselineClosure = { [unowned self] in
                 try self._saveNewBaselineIfNeeded(currentDestination,
-                                          result,
-                                          strategy: strategy,
-                                          existingDestinationUUID: baselineUUID,
-                                          existingDestinations: destinations,
-                                          existingBaselines: baselines)
+                                                  result[keyPath: metric],
+                                                  strategy: strategy,
+                                                  existingDestinationUUID: baselineUUID,
+                                                  existingDestinations: destinations,
+                                                  existingBaselines: baselines)
             }
         } catch {
             XCTFail(String(describing: error), file: file, line: line)
@@ -324,7 +328,7 @@ open class PerformanceTestCase: XCTestCase {
 
     private func _saveNewBaselineIfNeeded(
         _ runDestination: RunDestination,
-        _ result: BenchmarkResult,
+        _ measurement: TimeInterval,
         strategy: BenchmarkStrategy,
         existingDestinationUUID: String?,
         existingDestinations: [String : RunDestination],
@@ -351,7 +355,7 @@ open class PerformanceTestCase: XCTestCase {
 
         let baseline = Baseline(
             strategy: strategy,
-            measurement: result.average,
+            measurement: measurement,
             maxPercentRelativeStandardDeviation: 10.0,
             userInfo: benchmarkUserInfo.isEmpty ? nil : benchmarkUserInfo
         )
